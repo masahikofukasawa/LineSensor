@@ -19,6 +19,7 @@ package us.aichisteel.linesensor;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.content.BroadcastReceiver;
@@ -28,6 +29,8 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.Paint.Align;
 import android.hardware.usb.UsbManager;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +41,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.physicaloid.lib.Physicaloid;
 import com.physicaloid.lib.usb.driver.uart.UartConfig;
@@ -55,6 +59,7 @@ import us.aichisteel.linesensor.R;
 public class LineSensorActivity extends Activity {
 
 	private LineSensorData sensorData = new LineSensorData();
+	private static final String ACTION_USB_PERMISSION = "us.aichisteel.linesensor.USB_PERMISSION";
 
 	Handler mHandler = new Handler();
 
@@ -64,8 +69,6 @@ public class LineSensorActivity extends Activity {
 	private String stStopCommand = "q";
 
 	private Physicaloid mSerial;
-
-//	private static final String ACTION_USB_PERMISSION = "com.example.ntsensor.USB_PERMISSION";
 
 	private Button btStart;
 	private Button btStop;
@@ -465,8 +468,7 @@ public class LineSensorActivity extends Activity {
 			} else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
 				detachedUi();
 				mSerial.close();
-			}
-/*
+				finish();
 			} else if (ACTION_USB_PERMISSION.equals(action)) {
 				synchronized (this) {
 					if (!mSerial.isOpened()) {
@@ -477,7 +479,6 @@ public class LineSensorActivity extends Activity {
 					mainloop();
 				}
 			}
-*/
 		}
 	};
 
@@ -493,6 +494,7 @@ public class LineSensorActivity extends Activity {
 
 		menu.add(Menu.NONE, 20, Menu.NONE, "Set Offset");
 		menu.add(Menu.NONE, 21, Menu.NONE, "Clear Offset");
+		menu.add(Menu.NONE, 30, Menu.NONE, "About");
 
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -515,6 +517,21 @@ public class LineSensorActivity extends Activity {
 			setOffset();
 		} else if (id == 21) {
 			clearOffset();
+		} else if (id == 30) {
+			((TextView) new AlertDialog.Builder(LineSensorActivity.this)
+			.setTitle("About")
+			.setIcon(android.R.drawable.ic_dialog_info)
+			.setMessage(
+							Html.fromHtml("<p>AMI LineSensor Application<br>"
+									+ "<a href=\"http://www.aichi-mi.com\">Aichi Micro Intelligent Corporation</a></p>"
+									+ "<p>This software includes the following works that are distributed in the Apache License 2.0.<br>"
+									+ " - Physicaloid Library<br>"
+									+ " - Achartengine 1.1.0</p>"
+									))
+			.show()
+			.findViewById(android.R.id.message))
+			.setMovementMethod(LinkMovementMethod.getInstance());
+
 		} else {
 		}
 		return false;
