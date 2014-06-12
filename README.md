@@ -6,7 +6,7 @@ AMI Line Sensor connected to Nexus7 through OTG adapter.
 ![NT Sensor connected to Nexus7](images/IMG_0175.JPG)
 
 LineSensor.apk captured image.
-![LineSensor.apk](010.png)
+![LineSensor.apk](images/010.png)
 
 
 External Libraries(included in the project)
