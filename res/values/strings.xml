@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AMI LineSensor</string>
+    <string name="action_settings">Settings</string>
+    <string name="start_button">Start</string>
+    <string name="stop_button">Stop</string>
+    <string name="offset_button">Set Offset</string>
+    <string name="offsetclear_button">Clear Offset</string>
+    <string name="x_name">X</string>
+    <string name="y_name">Y</string>
+    <string name="z_name">Z</string>
+    <string name="pow_name">Power</string>
+    
+</resources>
