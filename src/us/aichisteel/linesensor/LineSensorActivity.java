@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Paint.Align;
 import android.text.Html;
@@ -46,8 +47,7 @@ import org.achartengine.renderer.XYSeriesRenderer;
 import us.aichisteel.amisensor.*;
 import us.aichisteel.linesensor.R;
 
-public class LineSensorActivity extends Activity implements
-		AMISensorInterface {
+public class LineSensorActivity extends Activity implements AMISensorInterface {
 
 	private LineSensor mSensor;
 	private Button btStart;
@@ -216,6 +216,11 @@ public class LineSensorActivity extends Activity implements
 	protected void onDestroy() {
 		mSensor.finalize(this);
 		super.onDestroy();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
 	}
 
 	@Override
