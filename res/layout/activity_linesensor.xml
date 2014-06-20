@@ -4,13 +4,13 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/margin"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     tools:context=".LineSensorActivity" >
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
         <Button
             android:id="@+id/btStart"
@@ -40,14 +40,21 @@
             android:id="@+id/btClearOffset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onOffset"
+            android:onClick="onClearOffset"
             android:text="@string/offsetclear_button"
             android:textColor="@color/dark_blue" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
         <RadioGroup
             android:id="@+id/radioGroup1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
 
             <RadioButton
                 android:id="@+id/rd_pow"
@@ -79,24 +86,12 @@
                 android:text="@string/z_name"
                 android:textColor="@color/dark_blue" />
         </RadioGroup>
-
-        <ScrollView
-            android:id="@+id/svText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:id="@+id/tvSerial"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:typeface="monospace" />
-        </ScrollView>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/plot_area"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:orientation="horizontal" >
     </LinearLayout>
 
