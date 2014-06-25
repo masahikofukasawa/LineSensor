@@ -35,7 +35,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
 import org.achartengine.chart.BarChart.Type;
@@ -43,7 +42,6 @@ import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
-
 import us.aichisteel.amisensor.*;
 import us.aichisteel.linesensor.R;
 
@@ -59,10 +57,9 @@ public class LineSensorActivity extends Activity implements AMISensorInterface {
 	private RadioButton rbtX;
 	private RadioButton rbtY;
 	private RadioButton rbtZ;
-
 	private XYMultipleSeriesRenderer mRenderer;
-	private XYMultipleSeriesDataset dataset;
-	private GraphicalView graphicalView;
+	private XYMultipleSeriesDataset mDataset;
+	private GraphicalView mGraphicalView;
 
 	private XYMultipleSeriesDataset buildDataset() {
 		XYMultipleSeriesDataset sd = new XYMultipleSeriesDataset();
@@ -116,9 +113,7 @@ public class LineSensorActivity extends Activity implements AMISensorInterface {
 		for (int ch = 1; ch <= 16; ch++) {
 			renderer.addXTextLabel(ch, "" + String.valueOf(ch));
 		}
-
 		renderer.setMargins(new int[] { 40, 60, 10, 20 });
-
 		renderer.setZoomButtonsVisible(false);
 		renderer.setZoomEnabled(false, true);
 		renderer.setPanEnabled(false, true);
@@ -134,14 +129,13 @@ public class LineSensorActivity extends Activity implements AMISensorInterface {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_linesensor);
 
-		dataset = buildDataset();
-
+		mDataset = buildDataset();
 		mRenderer = buildRenderer();
 
 		LinearLayout layout = (LinearLayout) findViewById(R.id.plot_area);
-		graphicalView = ChartFactory.getBarChartView(getApplicationContext(),
-				dataset, mRenderer, Type.DEFAULT);
-		layout.addView(graphicalView, new LayoutParams(
+		mGraphicalView = ChartFactory.getBarChartView(getApplicationContext(),
+				mDataset, mRenderer, Type.DEFAULT);
+		layout.addView(mGraphicalView, new LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 
 		btStart = (Button) findViewById(R.id.btStart);
@@ -242,69 +236,91 @@ public class LineSensorActivity extends Activity implements AMISensorInterface {
 
 	@Override
 	public void dataReady() {
-		dataset.getSeriesAt(0).clear();
+		mDataset.getSeriesAt(0).clear();
 		for (int ch = 1; ch <= 16; ch++) {
 			if (mSensor.getSensorAxis() == LineSensor.AXIS_ID_POWER) {
-				dataset.getSeriesAt(0).add(ch, mSensor.getPower(ch));
+				mDataset.getSeriesAt(0).add(ch, mSensor.getPower(ch));
 			} else if (mSensor.getSensorAxis() == LineSensor.AXIS_ID_X) {
-				dataset.getSeriesAt(0).add(ch, mSensor.getData(ch, 0));
+				mDataset.getSeriesAt(0).add(ch, mSensor.getData(ch, 0));
 			} else if (mSensor.getSensorAxis() == LineSensor.AXIS_ID_Y) {
-				dataset.getSeriesAt(0).add(ch, mSensor.getData(ch, 1));
+				mDataset.getSeriesAt(0).add(ch, mSensor.getData(ch, 1));
 			} else if (mSensor.getSensorAxis() == LineSensor.AXIS_ID_Z) {
-				dataset.getSeriesAt(0).add(ch, mSensor.getData(ch, 2));
+				mDataset.getSeriesAt(0).add(ch, mSensor.getData(ch, 2));
 			}
 		}
-		graphicalView.repaint();
+		mGraphicalView.repaint();
+	}
+
+	private enum MenuId {
+		AXIS_TYPE,AXIS_POWER, AXIS_X, AXIS_Y, AXIS_Z, SET_OFFSET, CLEAR_OFFSET, ABOUT;
+	}
+
+	public static <E extends Enum<E>> E fromOrdinal(Class<E> enumClass,
+			int ordinal) {
+		E[] enumArray = enumClass.getEnumConstants();
+		return enumArray[ordinal];
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		SubMenu planeMenu = menu.addSubMenu(Menu.NONE, 0, Menu.NONE,
+		SubMenu planeMenu = menu.addSubMenu(Menu.NONE, MenuId.AXIS_TYPE.ordinal(), Menu.NONE,
 				"Data Type");
-		planeMenu.add(Menu.NONE, 1, Menu.NONE, "Power");
-		planeMenu.add(Menu.NONE, 2, Menu.NONE, "X-Axis");
-		planeMenu.add(Menu.NONE, 3, Menu.NONE, "Y-Axis");
-		planeMenu.add(Menu.NONE, 4, Menu.NONE, "Z-Axis");
+		planeMenu.add(Menu.NONE, MenuId.AXIS_POWER.ordinal(), Menu.NONE, "Power");
+		planeMenu.add(Menu.NONE, MenuId.AXIS_X.ordinal(), Menu.NONE, "X-Axis");
+		planeMenu.add(Menu.NONE, MenuId.AXIS_Y.ordinal(), Menu.NONE, "Y-Axis");
+		planeMenu.add(Menu.NONE, MenuId.AXIS_Z.ordinal(), Menu.NONE, "Z-Axis");
 		planeMenu.setGroupCheckable(Menu.NONE, true, true);
 		planeMenu.findItem(1).setChecked(true);
-		menu.add(Menu.NONE, 20, Menu.NONE, "Set Offset");
-		menu.add(Menu.NONE, 21, Menu.NONE, "Clear Offset");
-		menu.add(Menu.NONE, 30, Menu.NONE, "About");
+		menu.add(Menu.NONE, MenuId.SET_OFFSET.ordinal(), Menu.NONE, "Set Offset");
+		menu.add(Menu.NONE, MenuId.CLEAR_OFFSET.ordinal(), Menu.NONE, "Clear Offset");
+		menu.add(Menu.NONE, MenuId.ABOUT.ordinal(), Menu.NONE, "About");
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == 1) {
+		MenuId menuid = fromOrdinal(MenuId.class, item.getItemId());
+		switch(menuid){
+		case AXIS_TYPE:
+			break;
+		case AXIS_POWER:
 			mSensor.setSensorAxis(LineSensor.AXIS_ID_POWER);
 			item.setChecked(item.isChecked() ? false : true);
-		} else if (id == 2) {
+			break;
+		case AXIS_X:
 			mSensor.setSensorAxis(LineSensor.AXIS_ID_X);
 			item.setChecked(item.isChecked() ? false : true);
-		} else if (id == 3) {
+			break;
+		case AXIS_Y:
 			mSensor.setSensorAxis(LineSensor.AXIS_ID_Y);
 			item.setChecked(item.isChecked() ? false : true);
-		} else if (id == 4) {
+			break;
+		case AXIS_Z:
 			mSensor.setSensorAxis(LineSensor.AXIS_ID_Z);
 			item.setChecked(item.isChecked() ? false : true);
-		} else if (id == 20) {
+			break;
+		case SET_OFFSET:
 			mSensor.setOffset();
-		} else if (id == 21) {
+			break;
+		case CLEAR_OFFSET:
 			mSensor.clearOffset();
-		} else if (id == 30) {
+			break;
+		case ABOUT:
 			((TextView) new AlertDialog.Builder(LineSensorActivity.this)
-					.setTitle("About")
-					.setIcon(android.R.drawable.ic_dialog_info)
-					.setMessage(
-							Html.fromHtml("<p>AMI LineSensor Application<br>"
-									+ "<a href=\"http://www.aichi-mi.com\">Aichi Micro Intelligent Corporation</a></p>"
-									+ "<p>This software includes the following works that are distributed in the Apache License 2.0.<br>"
-									+ " - Physicaloid Library<br>"
-									+ " - Achartengine 1.1.0</p>")).show()
-					.findViewById(android.R.id.message))
-					.setMovementMethod(LinkMovementMethod.getInstance());
-
+			.setTitle("About")
+			.setIcon(android.R.drawable.ic_dialog_info)
+			.setMessage(
+					Html.fromHtml("<p>AMI LineSensor Application<br>"
+							+ "<a href=\"http://www.aichi-mi.com\">Aichi Micro Intelligent Corporation</a></p>"
+							+ "<p>This software includes the following works that are distributed in the Apache License 2.0.<br>"
+							+ " - Physicaloid Library<br>"
+							+ " - Achartengine 1.1.0</p>")).show()
+			.findViewById(android.R.id.message))
+			.setMovementMethod(LinkMovementMethod.getInstance());
+			break;
+		}
+		if (mGraphicalView != null) {
+			mGraphicalView.repaint();
 		}
 		return false;
 	}
