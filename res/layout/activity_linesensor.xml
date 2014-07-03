@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:onClick="onStart"
             android:text="@string/start_button"
-            android:textColor="@color/dark_blue" />
+            android:textColor="@color/text_color" />
 
         <Button
             android:id="@+id/btStop"
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:onClick="onStop"
             android:text="@string/stop_button"
-            android:textColor="@color/dark_blue" />
+            android:textColor="@color/text_color" />
 
         <Button
             android:id="@+id/btOffset"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:onClick="onOffset"
             android:text="@string/offset_button"
-            android:textColor="@color/dark_blue" />
+            android:textColor="@color/text_color" />
 
         <Button
             android:id="@+id/btClearOffset"
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:onClick="onClearOffset"
             android:text="@string/offsetclear_button"
-            android:textColor="@color/dark_blue" />
+            android:textColor="@color/text_color" />
     </LinearLayout>
 
     <LinearLayout
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="@string/pow_name"
-                android:textColor="@color/dark_blue" />
+                android:textColor="@color/text_color" />
 
             <RadioButton
                 android:id="@+id/rd_x"
@@ -70,21 +70,21 @@
                 android:layout_height="wrap_content"
                 android:checked="false"
                 android:text="@string/x_name"
-                android:textColor="@color/dark_blue" />
+                android:textColor="@color/text_color" />
 
             <RadioButton
                 android:id="@+id/rd_y"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/y_name"
-                android:textColor="@color/dark_blue" />
+                android:textColor="@color/text_color" />
 
             <RadioButton
                 android:id="@+id/rd_z"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/z_name"
-                android:textColor="@color/dark_blue" />
+                android:textColor="@color/text_color" />
         </RadioGroup>
     </LinearLayout>
 

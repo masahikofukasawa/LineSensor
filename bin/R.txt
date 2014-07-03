@@ -2,9 +2,9 @@ int color actionbar_background 0x7f070005
 int color actionbar_text 0x7f070006
 int color back_ground 0x7f070001
 int color button 0x7f070003
-int color dark_blue 0x7f070000
 int color grid 0x7f070002
 int color margin 0x7f070004
+int color text_color 0x7f070000
 int dimen activity_horizontal_margin 0x7f080000
 int dimen activity_vertical_margin 0x7f080001
 int drawable ic_launcher 0x7f020000

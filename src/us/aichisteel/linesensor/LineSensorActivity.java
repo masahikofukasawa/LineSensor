@@ -30,11 +30,14 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
 import org.achartengine.chart.BarChart.Type;
@@ -96,10 +99,10 @@ public class LineSensorActivity extends Activity implements AMISensorInterface {
 		renderer.setBarSpacing(0.1);
 		renderer.setApplyBackgroundColor(true);
 
-		renderer.setAxesColor(getResources().getColor(R.color.dark_blue));
-		renderer.setLabelsColor(getResources().getColor(R.color.dark_blue));
-		renderer.setXLabelsColor(getResources().getColor(R.color.dark_blue));
-		renderer.setYLabelsColor(0, getResources().getColor(R.color.dark_blue));
+		renderer.setAxesColor(getResources().getColor(R.color.text_color));
+		renderer.setLabelsColor(getResources().getColor(R.color.text_color));
+		renderer.setXLabelsColor(getResources().getColor(R.color.text_color));
+		renderer.setYLabelsColor(0, getResources().getColor(R.color.text_color));
 		renderer.setBackgroundColor(getResources()
 				.getColor(R.color.back_ground));
 		renderer.setMarginsColor(getResources().getColor(R.color.margin));
@@ -120,13 +123,14 @@ public class LineSensorActivity extends Activity implements AMISensorInterface {
 		renderer.setPanLimits(new double[] { -1, 17, -15000, 15000 });
 		renderer.setZoomLimits(new double[] { -1, 17, -15000, 15000 });
 
-		setRenderer(renderer, getResources().getColor(R.color.dark_blue));
+		setRenderer(renderer, getResources().getColor(R.color.text_color));
 		return renderer;
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.activity_linesensor);
 
 		mDataset = buildDataset();
@@ -152,8 +156,8 @@ public class LineSensorActivity extends Activity implements AMISensorInterface {
 		btClearOffset.setVisibility(View.GONE);
 		rgSensorSelection.setVisibility(View.GONE);
 
-		mSensor = new LineSensor(this);
-		mSensor.initialize(this);
+		mSensor = new LineSensor(this,this);
+		mSensor.initializeSensor();
 		enableButtons(mSensor.isReady());
 
 		btStart.setOnClickListener(new View.OnClickListener() {
@@ -208,7 +212,7 @@ public class LineSensorActivity extends Activity implements AMISensorInterface {
 	}
 
 	protected void onDestroy() {
-		mSensor.finalize(this);
+		mSensor.finalizeSensor();
 		super.onDestroy();
 	}
 
@@ -219,17 +223,20 @@ public class LineSensorActivity extends Activity implements AMISensorInterface {
 
 	@Override
 	public void onNewIntent(Intent intent) {
-		mSensor.initialize(this);
+		mSensor.initializeSensor();
 		enableButtons(mSensor.isReady());
 	}
 
 	@Override
 	public void attachedSensor() {
-		enableButtons(mSensor.isReady());
+		Toast.makeText(this, "Sensor attached.",
+		Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void detachedSensor() {
+		Toast.makeText(this, "Sensor detached.",
+		Toast.LENGTH_SHORT).show();
 		enableButtons(mSensor.isReady());
 		finish();
 	}
@@ -319,9 +326,7 @@ public class LineSensorActivity extends Activity implements AMISensorInterface {
 			.setMovementMethod(LinkMovementMethod.getInstance());
 			break;
 		}
-		if (mGraphicalView != null) {
-			mGraphicalView.repaint();
-		}
+		mGraphicalView.repaint();
 		return false;
 	}
 
@@ -337,7 +342,7 @@ public class LineSensorActivity extends Activity implements AMISensorInterface {
 
 		int color;
 		if (enable)
-			color = getResources().getColor(R.color.dark_blue);
+			color = getResources().getColor(R.color.text_color);
 		else
 			color = Color.GRAY;
 
